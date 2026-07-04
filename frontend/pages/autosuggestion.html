@@ -34,9 +34,15 @@
                 width:30%;
             }
             #suggestion-box{
-                border: 1px solid black;
+                /* border: 1px solid black; */
                 width: 30%;
                 margin-left: 35%;
+            }
+            #suggestion-item{
+                border: 1px solid black;
+                padding: 10px;
+                border-radius: 10px;
+                /* cursor: pointer; */
             }
         </style>
     </head>
@@ -51,13 +57,48 @@
 <p class="tag-line">One million phrase. Four algorithms. Prefix Based Auto Suggest.</p>
 <span>
     <span class="lens">&#x1F50D;</span>
-    <input class="search-box" placeholder="Start typing to search">
+    <input class="search-box" id="search-box" placeholder="Start typing to search">
     </span>
     <div id="suggestion-box">
-        Suggestion Box
+        <!-- Suggestion Box -->
 
     </div>
 </div>
+<script>
+    var searchBox = document.getElementById("search-box");
+    var suggestionBox = document.getElementById("suggestion-box");
+    searchBox.addEventListener("input", function() {
+       //1. get usertype text
+       var userInput = searchBox.value;
+       if(userInput.trim()===""){
+
+       }else{
+        var URL1 =  "https://autosuggest-backend.onrender.com/api/autosuggest?q=";
+        var URL2 = "&algorithm=brute&limit=10&weighted=false";
+        var url = URL1 + userInput + URL2;
+        fetch(url)
+        .then(function(response){
+            return response.json();
+        })
+        .then(function(data){
+            console.log(data);
+            var reslutsArray = data.results;
+            var htmlResults = "";
+            for(var i=0;i<reslutsArray.length;i++){
+                htmlResults += "<div id='suggestion-item'>"+reslutsArray[i].text+"</div>";
+            }
+             //var suggestionBox = document.getElementById("suggestion-box");
+            suggestionBox.innerHTML = htmlResults;
+
+        })
+        
+
+       }
+       //2. Make API call to get suggestions
+       //3. Display results in HTML
+    });
+
+</script>
 
 </body>
 </html>
